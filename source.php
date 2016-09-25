@@ -1,13 +1,4 @@
 <?php
-/*
-  Plugin Name: rtSocial
-  Plugin URI: https://rtcamp.com/rtsocial/
-  Author: rtCamp
-  Author URI: https://rtcamp.com/
-  Version: 2.2.0
-  Description: It is the lightest social sharing plugin, uses non-blocking Javascript and a single sprite to get rid of all the clutter that comes along with the sharing buttons.
-  Tags: rtcamp, social, sharing, share, social links, twitter, facebook, pin it, pinterest, linkedin, linked in, linked in share, google plus, google plus share, gplus share, g+ button, g+ share, plus one button, social share, social sharing
- */
 
 /*
  * Initial Actions
@@ -15,9 +6,6 @@
 add_action( 'admin_menu', 'rtsocial_admin' );
 add_action( 'admin_notices', 'rts_gplus_notice' );
 add_action( 'wp_ajax_rts_hide_g_plus_notice', 'rts_hide_g_plus_notice' );
-
-register_activation_hook( __FILE__, 'rtsocial_set_defaults' );
-register_deactivation_hook( __FILE__, 'rtsocial_reset_defaults' );
 
 /*
  * Settings Page
@@ -1055,68 +1043,6 @@ function rtsocial( $args = array() ) {
     $layout .= '<a title="' . esc_attr( $rtatitle ) . '" rel="nofollow" class="perma-link" href="' . $rts_permalink . '"></a><input type="hidden" name="rts_id" class="rts_id" value="' . $post_obj->ID . '" />' . wp_nonce_field( 'rts_media_' . $post_obj->ID, 'rts_media_nonce', true, false ) . '</div>';
 
     return $layout;
-}
-
-/*
- * Function for setting default values
- */
-
-function rtsocial_set_defaults() {
-    if( is_multisite() ) {
-        foreach( wp_get_sites() as $i => $site ) {
-            switch_to_blog( $site[ 'blog_id' ] );
-            
-            $defaults = array(
-                'fb_style' => 'like_light',
-                'tw_handle' => '',
-                'tw_related_handle' => '',
-                'placement_options_set' => 'bottom',
-                'display_options_set' => 'horizontal',
-                'alignment_options_set' => 'right',
-                'active' => array( 'tw', 'fb', 'lin', 'pin' ),
-                'inactive' => array( 'gplus' )
-            );
-
-            if ( !get_option( 'rtsocial_plugin_options' ) ) {
-                update_option( 'rtsocial_plugin_options', $defaults );
-            }
-            
-            restore_current_blog();
-        }
-    } else {
-        $defaults = array(
-            'fb_style' => 'like_light',
-            'tw_handle' => '',
-            'tw_related_handle' => '',
-            'placement_options_set' => 'bottom',
-            'display_options_set' => 'horizontal',
-            'alignment_options_set' => 'right',
-            'active' => array( 'tw', 'fb', 'lin', 'pin' ),
-            'inactive' => array( 'gplus' )
-        );
-
-        if ( !get_option( 'rtsocial_plugin_options' ) ) {
-            update_option( 'rtsocial_plugin_options', $defaults );
-        }
-    }
-}
-
-/*
- * Delete plugin options
- */
-
-function rtsocial_reset_defaults() {
-    if( is_multisite() && is_plugin_active_for_network( 'rtsocial/source.php' ) ) {
-        foreach( wp_get_sites() as $i => $site ) {
-            switch_to_blog( $site[ 'blog_id' ] );
-            
-            delete_option( 'rtsocial_plugin_options' );
-            
-            restore_current_blog();
-        }
-    } else {
-        delete_option( 'rtsocial_plugin_options' );
-    }
 }
 
 /*
