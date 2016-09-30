@@ -155,6 +155,8 @@ class RTSocial {
 
 		$rtsocial_admin = new RTSocial_Admin( $this->get_plugin_name(), $this->get_version() );
 
+		$this->loader->add_action( 'admin_menu', $rtsocial_admin, 'rts_add_admin_menu' );
+
 	}
 
 	/**
